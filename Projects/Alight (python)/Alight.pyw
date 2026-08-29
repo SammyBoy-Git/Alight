@@ -4,11 +4,11 @@ import sys
 import os
 import math
 
-# Initialize Pygame & Mixer[cite: 8, 11]
+# Initialize Pygame & Mixer
 pygame.init()
 pygame.mixer.init()
 
-# Screen dimensions (Logical Canvas size)[cite: 8, 11]
+# Screen dimensions (Logical Canvas size)
 LOGICAL_WIDTH = 800
 LOGICAL_HEIGHT = 600
 window = pygame.display.set_mode((LOGICAL_WIDTH, LOGICAL_HEIGHT), pygame.RESIZABLE)
@@ -18,7 +18,7 @@ fade_surface = pygame.Surface((LOGICAL_WIDTH, LOGICAL_HEIGHT))
 fade_surface.fill((0, 0, 0))
 pygame.display.set_caption("Alight")
 
-# Colors[cite: 8, 11]
+# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 50, 50)
@@ -26,17 +26,17 @@ GRAY = (100, 100, 100)
 SKY_BLUE = (247, 223, 143)
 GREEN = (50, 255, 50)
 
-# Clock for frame rate[cite: 8, 11]
+# Clock for frame rate
 clock = pygame.time.Clock()
 
-# Explicit Absolute Directories[cite: 8, 11]
+# Explicit Absolute Directories
 SPRITE_DIR = r"C:\Projects\Alight (python)\Sprites"
 SFX_DIR = r"C:\Projects\Alight (python)\Sound Effects"
 
-# Ground level definition[cite: 8, 11]
+# Ground level definition
 ground_y = 420
 
-# Robust Audio Loader with Dummy Fallback[cite: 8, 11]
+# Robust Audio Loader with Dummy Fallback
 class DummySound:
     def play(self): pass
 
@@ -72,7 +72,7 @@ def update_background_music(state):
         if state not in ["WIN_SEQUENCE"]:
             pygame.mixer.music.stop()
 
-# Load all required sprites[cite: 8, 11]
+# Load all required sprites
 def load_sprite_flexible(name, size):
     for ext in [".png", ".jpg"]:
         path = os.path.join(SPRITE_DIR, name + ext)
@@ -104,12 +104,12 @@ shield_powerup_img = load_sprite_flexible("Sheild", (35, 35))
 apple_powerup_img = load_sprite_flexible("apple", (35, 35))
 heal_sprite = load_sprite_flexible("Healing noah", (70, 70))
 
-# Load Ambient Particle Sprites & Dash Sprite[cite: 8, 11]
+# Load Ambient Particle Sprites & Dash Sprite
 raw_cherry_img = load_sprite_flexible("Ambient cherry", (16, 16))
 raw_firefly_img = load_sprite_flexible("Ambient fire fly", (14, 14))
 dash_sprite_raw = load_sprite_flexible("Dash", (90, 45))
 
-# Global Dying Enemy Effects Handler & Particle System[cite: 8, 11]
+# Global Dying Enemy Effects Handler & Particle System
 dying_enemies = []
 critical_texts = []
 ambient_particles = []
@@ -193,7 +193,7 @@ def update_and_draw_dying_enemies(surface, camera_pos_x):
             surf.set_alpha(max(0, de["alpha"]))
             surface.blit(surf, (de["x"] - camera_pos_x, de["y"]))
 
-# Fixed Flashed Sprite using Pygame Masks (Fixes Surface Locked Crash & Lag)[cite: 8, 11]
+# Fixed Flashed Sprite using Pygame Masks (Fixes Surface Locked Crash & Lag)
 white_silhouette_cache = {}
 
 def get_white_silhouette(sprite):
@@ -212,7 +212,7 @@ def draw_flashed_sprite(surface, sprite, pos, flash_timer, max_flash_frames=6):
         flashed_surf.set_alpha(flash_alpha)
         surface.blit(flashed_surf, pos)
 
-# CRT Overlay Setup[cite: 8, 11]
+# CRT Overlay Setup
 def generate_crt_overlay():
     crt_overlay.fill((0, 0, 0, 0))
     for y in range(0, LOGICAL_HEIGHT, 2):
@@ -253,7 +253,7 @@ def draw_skip_button(surface):
     
     return skip_rect
 
-# Default Game Parameters[cite: 8, 11]
+# Default Game Parameters
 config_zombie_hits = 3
 config_stranger_hits = 1
 config_slime_hits = 3
@@ -369,7 +369,7 @@ def reset_game():
     next_state_after_fade = "VILLAGE_FIGHT"
     gun_damage_multiplier = 1.0
 
-# Game Initialization[cite: 8, 11]
+# Game Initialization
 game_state = "START_SCREEN"
 gravity = 0.6
 
@@ -514,7 +514,7 @@ def update_and_draw_powerups(surface, camera_pos_x, noah_rect):
             elif p["type"] == "shield":
                 shield_active = True
 
-# Main Game Loop[cite: 8, 11]
+# Main Game Loop
 while True:
     dt = clock.tick(60) / 1000.0
     current_time_ms = pygame.time.get_ticks()
@@ -530,25 +530,7 @@ while True:
             sys.exit()
             
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                if game_state in ["BOSS_FIGHT", "VILLAGE_FIGHT", "ZOMBIE_WAVE", "GUARD_STAGE", "FIRE_STAGE", "SLIME_STAGE"]:
-                    game_state = "PAUSE"
-                    pygame.mixer.music.pause()
-                elif game_state == "PAUSE":
-                    pygame.mixer.music.unpause()
-                    if noah_world_x > 1000 and len(active_bosses) > 0:
-                        game_state = "BOSS_FIGHT"
-                    elif guards_spawned and len(active_guards) > 0:
-                        game_state = "GUARD_STAGE"
-                    elif fires_remaining > 0 and len(active_fires) > 0:
-                        game_state = "FIRE_STAGE"
-                    elif slimes_remaining > 0 or len(active_slimes) > 0:
-                        game_state = "SLIME_STAGE"
-                    elif zombies_remaining > 0 or len(active_zombies) > 0:
-                        game_state = "ZOMBIE_WAVE"
-                    else:
-                        game_state = "VILLAGE_FIGHT"
-            elif event.key == pygame.K_r:
+            if event.key == pygame.K_r:
                 if game_state in ["GAME_OVER", "WIN_SEQUENCE"]:
                     reset_game()
 
@@ -1897,12 +1879,6 @@ while True:
                 charge_pct = min(100, int((charge_time / 5.0) * 100))
                 draw_text_shadow(canvas, f"Charging Power: {charge_pct}%", font, RED, LOGICAL_WIDTH // 2, LOGICAL_HEIGHT - 40, center=True)
 
-        # ==================== STATE 5: PAUSE MENU ====================
-        elif game_state == "PAUSE":
-            pygame.mouse.set_visible(True)
-            draw_text_shadow(canvas, "GAME PAUSED", large_font, WHITE, LOGICAL_WIDTH // 2, LOGICAL_HEIGHT // 2 - 40, center=True)
-            draw_text_shadow(canvas, "Press ESC to Resume", font, WHITE, LOGICAL_WIDTH // 2, LOGICAL_HEIGHT // 2 + 10, center=True)
-
         # ==================== STATE 6: WIN SEQUENCE ====================
         elif game_state == "WIN_SEQUENCE":
             win_timer += 1
@@ -1971,6 +1947,6 @@ while True:
     scaled_canvas = pygame.transform.scale(canvas, (win_w, win_h))
     window.blit(scaled_canvas, (0, 0))
 
-    pygame.display.flip()
+    pygame.display.flip() 
 
- #visit "https://tinyurl.com/Sams-Games" to see all my games!
+    #visit "https://tinyurl.com/Sams-Games" to see more of my games!
