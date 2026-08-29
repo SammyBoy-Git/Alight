@@ -1972,3 +1972,5 @@ while True:
     window.blit(scaled_canvas, (0, 0))
 
     pygame.display.flip()
+
+ #visit "https://tinyurl.com/Sams-Games" to see all my games!
